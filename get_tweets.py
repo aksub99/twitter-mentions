@@ -1,8 +1,6 @@
 import twint
 import re
-import math
 import json
-import pandas as pd
 from pymongo import MongoClient
 from datetime import datetime, timedelta
 
