@@ -14,7 +14,6 @@ class TwitterMentions:
 
     def query_paper_identifiers(self, title, doi, pubmed_id, pmcid, fetch_threads):
         # Query tweets with title, doi, pubmed_id and pmcid
-        # TODO: CHECK DUPLICATES
         if title == None:
             tweets_title = []
         else:
