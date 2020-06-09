@@ -1,7 +1,6 @@
 import twint
 import re
 import json
-from pymongo import MongoClient
 from datetime import datetime, timedelta
 from tweet_document import TweetDocument
 from mongoengine import connect
