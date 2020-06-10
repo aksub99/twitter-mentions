@@ -6,14 +6,11 @@ from mongoengine import (
 
 indexes = [
     'tweet_text',
-    'tweet_id', 'username',
-    'user_id',
-    'urls',
-    'link',
-    'is_retweet',
-    'title', 'doi', 'pubmed_id',
-    'pmcid', 'profile_image_url',
-    'votes', 'tweet_date', 'last_updated', 'conversation_id'
+    'tweet_id', 'urls', 'link',
+    'is_retweet', 'votes', 'tweet_date',
+    'username', 'user_id', 'profile_image_url',
+    'title', 'doi', 'pubmed_id', 'pmcid', 'date_updated',
+    'is_queried_tweet', 'conversation_id'
 ]
 
 
