@@ -6,13 +6,18 @@ from tweet_document import TweetDocument
 from mongoengine import connect
 
 
-class TwitterMentions:
+class TwitterMentions(object):
     
     def setup_db(self):
+        """
+        Connect to mongod server.
+        """
         connect()
 
     def query_paper_identifiers(self, title, doi, pubmed_id, pmcid, fetch_threads):
-        # Query tweets with title, doi, pubmed_id and pmcid
+        """
+        Query tweets with title, doi, pubmed_id and pmcid.
+        """
         if title == None:
             tweets_title = []
         else:
@@ -38,7 +43,9 @@ class TwitterMentions:
         self.get_tweet_info(tweets_list_query, title, doi, pubmed_id, pmcid, fetch_threads)
 
     def query(self, query):
-        # Search for tweets that contain "query"
+        """
+        Search for tweets that contain "query".
+        """
         tweets = []
         c = twint.Config()
         c.Search = '"' + query + '"'
@@ -50,6 +57,9 @@ class TwitterMentions:
         return tweets
 
     def get_votes_and_profile_image(self, tweet, full_thread_text=None, title=None, doi=None, pubmed_id=None, pmcid=None, return_votes=True):
+        """
+        Get profile image of tweeter and compute votes of tweet.
+        """
         # Inspired by https://github.com/karpathy/arxiv-sanity-preserver
         def tprepro(tweet_text):
             # take tweet, return set of words
@@ -103,7 +113,9 @@ class TwitterMentions:
 
     def save_document(self, tweet, profile_image_url,
                       title, doi, pubmed_id, pmcid, is_queried_tweet, votes=None):
-        # Save document into mongodb database
+        """
+        Save document into mongodb database.
+        """
         try:
             TweetDocument.objects.get(tweet_id=tweet.id_str)
         except:
@@ -114,7 +126,9 @@ class TwitterMentions:
                           conversation_id=tweet.conversation_id, is_queried_tweet=is_queried_tweet).save()
 
     def get_thread_tweets_info(self, thread_tweets, thread_text, title, doi, pubmed_id, pmcid, queried_tweet_id):
-        # Loop through all tweets in a thread and save in database
+        """
+        Loop through all tweets in a thread and save in database.
+        """
         for tweet in thread_tweets:
             is_queried_tweet = False
             return_votes = False
@@ -129,7 +143,9 @@ class TwitterMentions:
             self.save_document(tweet, profile_image_url, title, doi, pubmed_id, pmcid, is_queried_tweet, votes)
 
     def get_tweet_info(self, tweets, title, doi, pubmed_id, pmcid, fetch_threads):
-        # Loop through tweets and collect information required in database
+        """
+        Loop through tweets and collect information required in database.
+        """
         for tweet in tweets:
             if not fetch_threads:
                 # If we want just the queried tweets
@@ -148,7 +164,9 @@ class TwitterMentions:
                 self.get_thread_tweets_info(thread_tweets, thread_text, title, doi, pubmed_id, pmcid, queried_tweet_id)
 
     def unroll_thread(self, tweet, is_first_tweet_in_thread):
-        # Unroll thread
+        """
+        Unroll thread.
+        """
         tweets_list_user = []
         c = twint.Config()
         c.Search = "@" + tweet.username
