@@ -6,7 +6,7 @@ import twint
 import re
 import json
 from datetime import datetime, timedelta
-from tweet_document import TweetDocument
+from tweet_document import TweetDocument, PaperDocument
 from mongoengine import connect
 
 
@@ -123,14 +123,20 @@ class TwitterMentions(object):
         """
         Save document into mongodb database.
         """
-        try:
-            TweetDocument.objects.get(tweet_id=tweet.id_str)
-        except:
+        # Check if paper is already in papers database. Else, update weight by 1.
+        if PaperDocument.objects(doi=doi):
+            paper = PaperDocument.objects.get(doi=doi)
+            paper.weight += 1
+            paper.save()
+        else:
+            paper = PaperDocument(title=title, doi=doi, pubmed_id=pubmed_id, pmcid=pmcid, weight=1).save()
+
+        # Check if tweet already exists, else create new tweet document.
+        if not TweetDocument.objects(tweet_id=tweet.id_str):
             TweetDocument(tweet_text=tweet.tweet, tweet_id=tweet.id_str, urls=tweet.urls, link=tweet.link,
                           is_retweet=tweet.retweet, votes=votes, tweet_date=datetime.fromisoformat(tweet.datestamp + ' ' + tweet.timestamp),
-                          username=tweet.username, user_id=tweet.user_id_str, profile_image_url=profile_image_url, title=title,
-                          doi=doi, pubmed_id=pubmed_id, pmcid=pmcid, date_updated=datetime.now(),
-                          conversation_id=tweet.conversation_id, is_queried_tweet=is_queried_tweet).save()
+                          username=tweet.username, user_id=tweet.user_id_str, profile_image_url=profile_image_url, date_updated=datetime.now(),
+                          conversation_id=tweet.conversation_id, is_queried_tweet=is_queried_tweet, paper=paper).save()
 
     def get_thread_tweets_info(self, thread_tweets, thread_text, title, doi, pubmed_id, pmcid, queried_tweet_id):
         """

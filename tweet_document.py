@@ -1,5 +1,6 @@
 from mongoengine import (
     connect, Document,
+    ReferenceField,
     StringField, ListField,
     DateTimeField, BooleanField, IntField)
 
@@ -12,6 +13,17 @@ indexes = [
     'title', 'doi', 'pubmed_id', 'pmcid', 'date_updated',
     'is_queried_tweet', 'conversation_id'
 ]
+
+
+class PaperDocument(Document):
+    # Paper information
+    title = StringField(default=None)
+    doi = StringField(default=None)
+    pubmed_id = StringField(default=None)
+    pmcid = StringField(default=None)
+
+    # Weight of paper so that it can be ranked amongst other papers
+    weight = IntField(required=True)
 
 
 class TweetDocument(Document):
@@ -29,14 +41,11 @@ class TweetDocument(Document):
     user_id = StringField(required=True)
     profile_image_url = StringField(required=True)
 
-    # Paper information
-    title = StringField(default=None)
-    doi = StringField(default=None)
-    pubmed_id = StringField(default=None)
-    pmcid = StringField(default=None)
-
     date_updated = DateTimeField(required=True)
     is_queried_tweet = BooleanField(required=True)
 
     # Thread id
     conversation_id = StringField(required=True)
+
+    # Paper that the tweet mentions
+    paper = ReferenceField(PaperDocument)
