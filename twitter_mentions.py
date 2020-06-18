@@ -1,12 +1,12 @@
 """
-Contains a class that supports retrieval of tweets mentioning papers papers.
+Contains a class that supports retrieval of tweets mentioning papers.
 """
 
 import twint
 import re
 import json
 from datetime import datetime, timedelta
-from tweet_document import TweetDocument, PaperDocument
+from db_documents import TweetDocument, PaperDocument
 from mongoengine import connect
 
 
@@ -14,7 +14,7 @@ class TwitterMentions(object):
     """
     Class that supports retrieval of tweets mentioning papers.
     """
-    
+
     def setup_db(self):
         """
         Connect to mongod server.
