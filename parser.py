@@ -22,7 +22,7 @@ def tweet_parser():
 
     for tweet in TweetDocument.objects.order_by('-tweet_date'):
         # Pick top scoring papers.
-        if datetime.now() - timedelta(days=30) <= tweet['tweet_date']:
+        if datetime.now() - timedelta(days=10) <= tweet['tweet_date']:
             if TopPaperDocument.objects(doi=tweet.paper.doi):
                 top_paper = TopPaperDocument.objects.get(doi=tweet.paper.doi)
                 top_paper.weight += 1
