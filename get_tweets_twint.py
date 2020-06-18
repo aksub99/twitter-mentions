@@ -1,3 +1,7 @@
+"""
+Contains a class that supports retrieval of tweets mentioning papers papers.
+"""
+
 import twint
 import re
 import json
@@ -7,6 +11,9 @@ from mongoengine import connect
 
 
 class TwitterMentions(object):
+    """
+    Class that supports retrieval of tweets mentioning papers.
+    """
     
     def setup_db(self):
         """
